@@ -1,53 +1,39 @@
-import ContactForm from 'Components/ContactForm/ContactForm';
-import { ContactIem } from 'Components/ContactItem/ContactItem';
-import { ContactList } from 'Components/ContactList/ContactList';
-import { Filter } from 'Components/Filter/Filter';
+import { Loader } from 'Components/Loader/Loader';
+import Navigation from 'Components/Navigation/Navigation';
+import { StyledAppContainer } from 'Components/Navigation/Navigation.styled';
+import { Suspense, lazy } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-// import { useDispatch, useSelector } from 'react-redux';
-// import { addContacts, deleteContacts } from 'redux/contactsSlice';
-// import { setFilter } from 'redux/filterSlice';
+const HomePage = lazy(() => import('pages/HomePage'));
+const LoginPage = lazy(() => import('pages/LoginPage'));
+const RegisterPage = lazy(() => import('pages/RegisterPage'));
+const ContactsPage = lazy(() => import('pages/ContactsPage'));
+
+const appRoutes = [
+  { path: '/', element: <HomePage /> },
+  { path: '/register', element: <RegisterPage /> },
+  { path: '/login', element: <LoginPage /> },
+  { path: '/contacts', element: <ContactsPage /> },
+];
 
 const App = () => {
-  // const contacts = useSelector(state => state.contacts.contactsData);
-
-  // const filter = useSelector(state => state.filter.filterData);
-
-  // const dispatch = useDispatch();
-
-  // const handleFilter = evt => {
-  //   dispatch(setFilter(evt.currentTarget.value));
-  // };
-
-  // const getVisibleContact = () => {
-  //   return contacts.filter(contact => {
-  //     return contact.name.toLowerCase().includes(filter.toLowerCase());
-  //   });
-  // };
-
-  // const getContact = data => {
-  //   contacts.some(
-  //     contact => contact.name.toLowerCase() === data.name.toLowerCase()
-  //   )
-  //     ? alert(`${data.name} is already in contacts`)
-  //     : dispatch(addContacts(data));
-  // };
-
-  // const handleDelete = contactId => {
-  //   dispatch(deleteContacts(contactId));
-  // };
-
   return (
-    <div>
-      <h1>Phonebook</h1>
-      <ContactForm />
+    <StyledAppContainer>
+      <Navigation />
 
-      <h2>Contacts</h2>
-      <Filter />
-      <ContactList>
-        <ContactIem />
-      </ContactList>
-    </div>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          {appRoutes.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
+        </Routes>
+      </Suspense>
+    </StyledAppContainer>
   );
 };
 
+// <Route path="/" element={<HomePage />} />
+//         <Route path="/register" element={<RegisterPage />} />
+//         <Route path="/login" element={<LoginPage />} />
+//         <Route path="/contacts" element={<ContactsPage />} />
 export default App;
