@@ -1,8 +1,10 @@
 import { Loader } from 'Components/Loader/Loader';
 import Navigation from 'Components/Navigation/Navigation';
 import { StyledAppContainer } from 'Components/Navigation/Navigation.styled';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import { refreshThunk } from 'redux/authSlice';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const LoginPage = lazy(() => import('pages/LoginPage'));
@@ -17,6 +19,12 @@ const appRoutes = [
 ];
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(refreshThunk());
+  }, [dispatch]);
+
   return (
     <StyledAppContainer>
       <Navigation />
