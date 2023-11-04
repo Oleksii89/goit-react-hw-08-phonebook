@@ -1,6 +1,8 @@
 import { Loader } from 'Components/Loader/Loader';
 import Navigation from 'Components/Navigation/Navigation';
 import { StyledAppContainer } from 'Components/Navigation/Navigation.styled';
+import PrivateRoute from 'Components/PrivateRoute/PrivateRoute';
+import RestrictedRoute from 'Components/RestrictedRoute/RestrictedRoute';
 import { Suspense, lazy, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
@@ -13,9 +15,30 @@ const ContactsPage = lazy(() => import('pages/ContactsPage'));
 
 const appRoutes = [
   { path: '/', element: <HomePage /> },
-  { path: '/register', element: <RegisterPage /> },
-  { path: '/login', element: <LoginPage /> },
-  { path: '/contacts', element: <ContactsPage /> },
+  {
+    path: '/register',
+    element: (
+      <RestrictedRoute>
+        <RegisterPage />
+      </RestrictedRoute>
+    ),
+  },
+  {
+    path: '/login',
+    element: (
+      <RestrictedRoute>
+        <LoginPage />
+      </RestrictedRoute>
+    ),
+  },
+  {
+    path: '/contacts',
+    element: (
+      <PrivateRoute>
+        <ContactsPage />
+      </PrivateRoute>
+    ),
+  },
 ];
 
 const App = () => {
@@ -40,8 +63,4 @@ const App = () => {
   );
 };
 
-// <Route path="/" element={<HomePage />} />
-//         <Route path="/register" element={<RegisterPage />} />
-//         <Route path="/login" element={<LoginPage />} />
-//         <Route path="/contacts" element={<ContactsPage />} />
 export default App;

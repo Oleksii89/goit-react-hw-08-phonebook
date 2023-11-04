@@ -1,7 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit/dist';
 import {
   requestLogin,
+  requestLogout,
   requestRefreshUser,
   requestRegister,
   setToken,
@@ -57,6 +58,19 @@ export const refreshThunk = createAsyncThunk(
   }
 );
 
+export const logOutThunk = createAsyncThunk(
+  'auth/logOut',
+  async (_, thunkAPI) => {
+    try {
+      await requestLogout();
+
+      return;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
 const INITIAL_STATE = {
   token: null,
   user: {
@@ -78,49 +92,54 @@ const authSlice = createSlice({
   extraReducers: builder =>
     builder
       //-------------REGISTER USER---------------------
-      .addCase(registerThunk.pending, (state, action) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.authenticated = true;
         state.token = action.payload.token;
         state.user = action.payload.user;
       })
-      .addCase(registerThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
       //-------------LOGIN USER---------------------
-      .addCase(loginThunk.pending, (state, action) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.authenticated = true;
         state.token = action.payload.token;
         state.user = action.payload.user;
       })
-      .addCase(loginThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
       //-------------REFRESH USER---------------------
-      .addCase(refreshThunk.pending, (state, action) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(refreshThunk.fulfilled, (state, action) => {
         state.isLoading = false;
         state.authenticated = true;
         state.user = action.payload;
       })
-      .addCase(refreshThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      }),
+      //-------------LOGOUT USER---------------------
+      .addCase(logOutThunk.fulfilled, () => {
+        return INITIAL_STATE;
+      })
+
+      .addMatcher(
+        isAnyOf(
+          logOutThunk.pending,
+          registerThunk.pending,
+          loginThunk.pending,
+          refreshThunk.pending
+        ),
+        (state, action) => {
+          state.isLoading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
+          logOutThunk.rejected,
+          registerThunk.rejected,
+          loginThunk.rejected,
+          refreshThunk.rejected
+        ),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      ),
 });
 
 // Редюсер слайсу

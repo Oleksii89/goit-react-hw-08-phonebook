@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
+import { useEffect } from 'react';
 import {
   StyledButton,
   StyledForm,
@@ -8,68 +7,42 @@ import {
 } from './ContactForm.styled.';
 
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
+import { useDispatch } from 'react-redux';
+import { addContact, fetchContacts } from 'redux/contactsSlice';
+import { useForm } from 'react-hook-form';
 
 const ContactForm = () => {
-  const contacts = useSelector(state => state.contacts.contactsData);
-
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const dispatch = useDispatch();
 
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
-  const handleChangeName = evt => {
-    setName(evt.target.value);
-  };
-
-  const handleChangeNumber = evt => {
-    setNumber(evt.target.value);
-  };
-
-  const handleSubmit = evt => {
-    evt.preventDefault();
-
-    getContact({ name: name, phone: number, id: nanoid() });
-    // evt.currentTarget.reset();
-    setName(''); // clear input
-    setNumber(''); // clear input
-  };
-
-  const getContact = data => {
-    contacts.some(
-      contact => contact.name.toLowerCase() === data.name.toLowerCase()
-    )
-      ? alert(`${data.name} is already in contacts`)
-      : dispatch(addContact(data));
+  const onSubmit = contact => {
+    dispatch(addContact(contact));
+    reset();
   };
 
   return (
-    <StyledForm onSubmit={handleSubmit}>
+    <StyledForm onSubmit={handleSubmit(onSubmit)}>
       <StyledLabel>
-        Name
-        <StyledInput
-          type="text"
-          name="name"
-          pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          value={name}
-          onChange={handleChangeName}
-          required
-        />
+        <span>Name:</span>
+        <StyledInput {...register('name', { required: true })} type="text" />
+        {errors.name && <span>This field is required</span>}
       </StyledLabel>
+
       <StyledLabel>
-        Number
-        <StyledInput
-          type="tel"
-          name="number"
-          pattern="\+?\d{1,4}?[\-.\s]?\(?\d{1,3}?\)?[\-.\s]?\d{1,4}[\-.\s]?\d{1,4}[\-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          value={number}
-          onChange={handleChangeNumber}
-          required
-        />
+        <span>Number:</span>
+        <StyledInput {...register('number', { required: true })} type="text" />
+        {errors.number && <span>This field is required</span>}
       </StyledLabel>
+
       <StyledButton type="submit">Add contact</StyledButton>
     </StyledForm>
   );

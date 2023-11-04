@@ -1,3 +1,4 @@
+import { StyledButton } from 'Components/ContactForm/ContactForm.styled.';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
@@ -38,7 +39,7 @@ const RegisterPage = () => {
         {errors.password && <span>This field is required</span>}
       </label>
 
-      <button type="submit">Sign Up</button>
+      <StyledButton type="submit">Sign Up</StyledButton>
     </form>
   );
 };

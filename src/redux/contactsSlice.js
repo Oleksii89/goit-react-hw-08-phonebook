@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit/dist';
 import {
   requestAddContact,
@@ -19,9 +19,10 @@ export const fetchContacts = createAsyncThunk(
 );
 export const addContact = createAsyncThunk(
   'contacts/addContact',
-  async (data, thunkAPI) => {
+  async (newContact, thunkAPI) => {
     try {
-      const contact = await requestAddContact(data);
+      const contact = await requestAddContact(newContact);
+      console.log(contact);
       return contact;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -32,8 +33,8 @@ export const deleteContact = createAsyncThunk(
   'contacts/deleteContact',
   async (contactId, thunkAPI) => {
     try {
-      const contact = await requestDeleteContact(contactId);
-      return contact;
+      const deletedContact = await requestDeleteContact(contactId);
+      return deletedContact;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -55,33 +56,13 @@ const contactsSlice = createSlice({
 
   extraReducers: builder =>
     builder
-      .addCase(fetchContacts.pending, (state, action) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(fetchContacts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.contactsData = action.payload;
       })
-      .addCase(fetchContacts.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      .addCase(addContact.pending, (state, action) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(addContact.fulfilled, (state, action) => {
         state.isLoading = false;
         state.contactsData = [...state.contactsData, action.payload];
-      })
-      .addCase(addContact.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-      .addCase(deleteContact.pending, (state, action) => {
-        state.isLoading = true;
-        state.error = null;
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -89,10 +70,29 @@ const contactsSlice = createSlice({
           contactData => contactData.id !== action.payload.id
         );
       })
-      .addCase(deleteContact.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      }),
+
+      .addMatcher(
+        isAnyOf(
+          fetchContacts.pending,
+          addContact.pending,
+          deleteContact.pending
+        ),
+        (state, action) => {
+          state.isLoading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
+          fetchContacts.rejected,
+          addContact.rejected,
+          deleteContact.rejected
+        ),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      ),
 });
 
 // Редюсер слайсу

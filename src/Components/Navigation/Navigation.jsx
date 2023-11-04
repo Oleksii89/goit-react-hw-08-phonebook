@@ -2,6 +2,7 @@ import React from 'react';
 import { StyledNavLink } from './Navigation.styled';
 import { useSelector } from 'react-redux';
 import { selectAuthAuthenticated } from 'redux/auth.selectors';
+import UserMenu from 'Components/UserMenu/UserMenu';
 
 const Navigation = () => {
   const authenticated = useSelector(selectAuthAuthenticated);
@@ -14,7 +15,8 @@ const Navigation = () => {
         {authenticated ? (
           <>
             <StyledNavLink to="/contacts">Contacts</StyledNavLink>
-            <button>Log Out</button>
+            <UserMenu />
+            {/* <StyledButton onClick={onLogOut}>Log Out</StyledButton> */}
           </>
         ) : (
           <>

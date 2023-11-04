@@ -34,9 +34,9 @@ export const ContactIem = () => {
     <div>
       {isLoading && <Loader />}
       {error && <p>{error}</p>}
-      {filteredContacts.map(({ name, phone, id }) => (
+      {filteredContacts.map(({ name, number, id }) => (
         <StyledContactItemLi key={id}>
-          {name} : {[phone]}
+          {name} : {[number]}
           <StyledFilterButton
             type="button"
             onClick={() => {
