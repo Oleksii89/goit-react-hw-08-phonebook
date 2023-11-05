@@ -6,22 +6,6 @@ export const StyledAppContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   padding: 0px 15px;
-
-  .title {
-    text-transform: uppercase;
-    text-decoration: overline;
-    color: brown;
-    transition: all 0.3s;
-
-    &:hover,
-    &:focus {
-      background-color: yellow;
-      color: blue;
-    }
-  }
-
-  .header-link {
-  }
 `;
 
 export const StyledNavLink = styled(NavLink)`
@@ -37,8 +21,34 @@ export const StyledNavLink = styled(NavLink)`
   transition: all 0.4s;
 
   &.active {
-    border: 1px solid white;
+    border: 2px solid white;
     background-color: grey;
     color: black;
   }
+`;
+
+export const StyledNav = styled.nav`
+  display: flex;
+`;
+
+export const StyledNavList = styled.ul`
+  display: flex;
+  list-style: none;
+`;
+export const StyledNavListUnAuth = styled.ul`
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+  margin-left: auto;
+`;
+export const StyledNavListAuth = styled.ul`
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+  margin-left: auto;
+`;
+
+export const StyledHeader = styled.header`
+  box-shadow: 5px 10px 8px 10px grey;
+  margin-bottom: 50px;
 `;

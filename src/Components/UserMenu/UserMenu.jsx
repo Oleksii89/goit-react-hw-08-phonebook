@@ -3,6 +3,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthUserData } from 'redux/auth.selectors';
 import { logOutThunk } from 'redux/authSlice';
+import { StyledUserMenuDiv, StyledUserName } from './UserMenu.styled';
 
 const UserMenu = () => {
   const dispatch = useDispatch();
@@ -12,10 +13,10 @@ const UserMenu = () => {
     dispatch(logOutThunk());
   };
   return (
-    <div>
-      <p>{user.name}</p>
+    <StyledUserMenuDiv>
+      <StyledUserName>Welcome, {user.name}!</StyledUserName>
       <StyledButton onClick={onLogOut}>Log Out</StyledButton>
-    </div>
+    </StyledUserMenuDiv>
   );
 };
 

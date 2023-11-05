@@ -51,7 +51,6 @@ const App = () => {
   return (
     <StyledAppContainer>
       <Navigation />
-
       <Suspense fallback={<Loader />}>
         <Routes>
           {appRoutes.map(({ path, element }) => (

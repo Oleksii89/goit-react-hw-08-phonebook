@@ -1,5 +1,12 @@
 import React from 'react';
-import { StyledNavLink } from './Navigation.styled';
+import {
+  StyledHeader,
+  StyledNav,
+  StyledNavLink,
+  StyledNavList,
+  StyledNavListAuth,
+  StyledNavListUnAuth,
+} from './Navigation.styled';
 import { useSelector } from 'react-redux';
 import { selectAuthAuthenticated } from 'redux/auth.selectors';
 import UserMenu from 'Components/UserMenu/UserMenu';
@@ -8,24 +15,31 @@ const Navigation = () => {
   const authenticated = useSelector(selectAuthAuthenticated);
 
   return (
-    <header>
-      <nav>
-        <StyledNavLink to="/">Home</StyledNavLink>
+    <StyledHeader>
+      <StyledNav>
+        <StyledNavList>
+          <li>
+            <StyledNavLink to="/">Home</StyledNavLink>
+          </li>
+        </StyledNavList>
 
         {authenticated ? (
-          <>
+          <StyledNavListAuth>
             <StyledNavLink to="/contacts">Contacts</StyledNavLink>
             <UserMenu />
-            {/* <StyledButton onClick={onLogOut}>Log Out</StyledButton> */}
-          </>
+          </StyledNavListAuth>
         ) : (
-          <>
-            <StyledNavLink to="/register">Register</StyledNavLink>
-            <StyledNavLink to="/login">Login</StyledNavLink>
-          </>
+          <StyledNavListUnAuth>
+            <li>
+              <StyledNavLink to="/register">Register</StyledNavLink>
+            </li>
+            <li>
+              <StyledNavLink to="/login">Login</StyledNavLink>
+            </li>
+          </StyledNavListUnAuth>
         )}
-      </nav>
-    </header>
+      </StyledNav>
+    </StyledHeader>
   );
 };
 

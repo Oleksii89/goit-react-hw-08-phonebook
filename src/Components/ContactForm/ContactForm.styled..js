@@ -22,10 +22,10 @@ export const StyledButton = styled.button`
   box-sizing: border-box;
   width: 100px;
   height: 24px;
-  background: teal;
+  background: grey;
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 15px;
 `;
