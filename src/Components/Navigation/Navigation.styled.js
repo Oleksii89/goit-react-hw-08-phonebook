@@ -49,6 +49,6 @@ export const StyledNavListAuth = styled.ul`
 `;
 
 export const StyledHeader = styled.header`
-  box-shadow: 5px 10px 8px 10px grey;
+  box-shadow: 5px 10px 8px 10px blue;
   margin-bottom: 50px;
 `;
