@@ -24,12 +24,6 @@ const ContactForm = () => {
 
   const dispatch = useDispatch();
 
-  // const checkedContact = data => {
-  //   return contacts.some(
-  //     element => element.name.toLowerCase() === data.name.toLowerCase()
-  //   );
-  // };
-
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
