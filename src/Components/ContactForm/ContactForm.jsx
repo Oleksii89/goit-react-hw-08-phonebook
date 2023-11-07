@@ -7,9 +7,10 @@ import {
 } from './ContactForm.styled.';
 
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact, fetchContacts } from 'redux/contactsSlice';
 import { useForm } from 'react-hook-form';
+import { selectContacts } from 'redux/contacts.selectors';
 
 const ContactForm = () => {
   const {
@@ -18,14 +19,27 @@ const ContactForm = () => {
     reset,
     formState: { errors },
   } = useForm();
+
+  const contacts = useSelector(selectContacts);
+
   const dispatch = useDispatch();
+
+  // const checkedContact = data => {
+  //   return contacts.some(
+  //     element => element.name.toLowerCase() === data.name.toLowerCase()
+  //   );
+  // };
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const onSubmit = contact => {
-    dispatch(addContact(contact));
+  const onSubmit = data => {
+    contacts.some(
+      contact => contact.name.toLowerCase() === data.name.toLowerCase()
+    )
+      ? alert(`${data.name} is already in contacts`)
+      : dispatch(addContact(data));
     reset();
   };
 
